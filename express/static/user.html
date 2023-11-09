@@ -3,29 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>User page</title>
 </head>
 <body>
-    <h1>USER DETAILS</h1>
-  
+    <h1 id="headding">User</h1>
+    <form onsubmit="add(event)">
+        <textarea name="note" id="note" cols="30" rows="10"></textarea>
+        <input type="submit" value="add">
+    </form>
     <script>
-       console.log(location.href);
-       let id=location.href.split("?id=")[1]
-       function profile(){
-   
-        fetch(`http://localhost:3000/api/profile`,{
-        method:"post",
-        headres:{
-            authorization:`Bearer ${token}
+        let headding = document.getElementById("headding");
+        let note = document.getElementById("note");
+        let token = localStorage.getItem("token");
+        function add(event) {
+            event.preventDefault()
+            console.log(note.value);
+            fetch("http://localhost:3000/api/add-note", {
+                method: "post",
+                headers: {
+                    authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    note: note.value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data)
+            })
+            .catch(error => {
+                console.log(error);
+            })
         }
-       })
-       .then(res => res.json())
-       .then(data =>{
-        console.log(data)
-       })
-       .catch()
-       }
-      
+
+        function profile() {
+            fetch("http://localhost:3000/api/profile", {
+                method: "get",
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                headding.innerHTML = `Welcome ${data.username}`
+            })
+            .catch(error => {
+                console.log(error);
+            })
+        }
+        profile()
     </script>
 </body>
 </html>
