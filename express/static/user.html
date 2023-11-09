@@ -11,6 +11,7 @@
         <textarea name="note" id="note" cols="30" rows="10"></textarea>
         <input type="submit" value="add">
     </form>
+    <ol id="notes"></ol>
     <script>
         let headding = document.getElementById("headding");
         let note = document.getElementById("note");
@@ -51,6 +52,33 @@
             .catch(error => {
                 console.log(error);
             })
+
+
+
+            fetch("http://localhost:3000/api/get-note", {
+                method: "get",
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+              notes.innerHTML="";
+              console.log(data.msg);
+              if(data.msg){
+                notes.innerHTML =data.msg
+                return;
+              }
+              data.forEach(item=>{
+                let li=`<li>${item.note}</li>`;
+                notes.innerHTML +=li
+
+
+              })
+            })
+          
+            
+
         }
         profile()
     </script>

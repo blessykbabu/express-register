@@ -9,7 +9,7 @@ const { sign } = jwt;
 
 export async function register(req, res) {
     try {
-        let { username, password } = req.body;
+        let { username, password,phone,email } = req.body;
         if( username.length < 4 && password.length < 4) {
             return res.json("Invalid username or password");
         }
@@ -18,7 +18,7 @@ export async function register(req, res) {
         if(userExist) {
             return res.status(401).send("User already exists");
         }
-        let result = await userSchema.create({ username, password: hashedPass });
+        let result = await userSchema.create({ username, password: hashedPass ,phone,email});
         return res.status(200).send("Registration successful!");
     } catch (error) {
         console.log(error);
@@ -84,5 +84,36 @@ export async function addNote(req, res) {
     } catch (error) {
         console.log(error);
         res.status(500).send("Error");
+    }
+}
+
+
+export async function  getNote(req,res){
+    try{
+        let {id}=req.user;
+        let result=await notesSchema.find({userId:id});
+        console.log(result)
+        if(result.length > 0){
+            return res.status(200).send(result)
+
+        }
+        return res.status(200).send({msg:"No notes to show"})
+    }
+    catch(error){
+        console.log(error)
+        return res.status(500).send("Error occured")
+    }
+}
+
+export async function updateData(req,res){
+    try {
+        let {id}=req.query;  
+        let data=req.body; 
+        let result=await userSchema.updateOne({_id:id},data)
+        res.json(result)
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("some error occcured")
     }
 }
