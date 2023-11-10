@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Update profile</h1>
+    <form onsubmit="edit(event)">
+        
+        <input type="text" name="phone" id="phone" placeholder="phone"><br>
+        <input type="email" name="email" id="email" placeholder="email"><br>
+        <input type="file" name="image" id="image">
+        <input type="submit" value="update">
+    </form>
+    <img alt="image">
+    <script>
+        let phone = document.getElementById("phone");
+        let email = document.getElementById("email");
+        let img=document.getElementsByTagName("img")[0]
+        function edit (event) {
+            event.preventDefault();
+            // fetch(`http://localhost:3000/api/edit`, {
+            //     method: "put",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({
+            //         phone: phone.value,
+            //         email: email.value,
+                    
+            //     })
+            // })
+            // .then(res => {
+            //     if(res.status === 200) {
+            //         alert("Registration successful!")
+            //         location.href = "http://localhost:3000/login.html";
+            //     }
+            // })
+            // .catch(error => {
+            //     console.log(error);
+            // })
+
+            readFile(image.files[0])
+            .then(file =>{
+                console.log(file)
+                img.src=file;
+                fetch("",{
+                    body:JSON.Stringify({
+                        image:file
+                    })
+                })
+            })
+        }
+        function readFile(file){
+            return new Promise((res,rej)=>{
+                let fileReader=new FileReader();
+                fileReader.readAsDataURL(file);
+                fileReader.onload=()=>{
+                    res(fileReader.result);
+                }
+                fileReader.onerror=()=>{
+                    rej(fileReader.error)
+                }
+            })
+        }
+    </script>
+</body>
+</html>          
