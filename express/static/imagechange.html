@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://localhost:3000/api/file" method="post" enctype="multipart/form-data">
+        <label for="myfile" >
+            <img src="http://localhost:3000/api/get-file/wallpaperflare.com_wallpaper.jpg" width="200">
+        </label>
+        <input type="file" name="myfile" id="myfile" style="display:none;" onChange="change(event)">
+        <input type="submit" value="upload">
+        
+    </form>
+    <!-- <img src="http://localhost:3000/api/get-file/wallpaperflare.com_wallpaper.jpg"> -->
+
+    <script>
+
+        async function change(event){
+            let file=await convert(event.target.files[0])
+            document.querySelector('img').src=file
+        }
+        function f(event){
+            let file={}
+            const data=new FormData(event.target)
+            fetch("",{
+                method:"post",
+                body:data
+            })
+        }
+           function convert(file){
+            return new Promise((res,rej)=>{
+                let fileReader = new FileReader();
+                fileReader.readAsDataURL(file);
+                fileReader.onload=() =>{
+                    res(fileReader.result)
+                }
+                fileReader.onerror = (error) =>{
+                    rej(error);
+                }
+            })
+        }
+    </script>
+</body>
+</html>
